@@ -1,0 +1,34 @@
+package MMIPackage;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import selenium_se_UATlogin.driver;
+
+
+public class Test2 {
+
+		
+		public void loginYesEmailNoPasssord()
+		{
+			this.setURI();
+			WebElement email=driver.findElement(By.id("email"));
+	        email.sendKeys("someemail@mail.com");
+	        
+	        WebElement password=driver.findElement(By.id("password-text"));
+	        password.sendKeys("");
+	        driver.findElement(By.id("Login")).click();
+	        this.compareMessage();
+	 	}
+
+		private void compareMessage() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		private void setURI() {
+			// TODO Auto-generated method stub
+			
+		}
+
+}

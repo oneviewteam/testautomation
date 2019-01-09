@@ -1,0 +1,193 @@
+/**
+ * 
+ */
+/**
+ * @author ksingh
+ *
+ */
+package Selenium_se_tests;
+
+
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+//import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.ITestResult;
+
+import com.google.common.io.Files;
+
+import junit.framework.Assert;
+
+@SuppressWarnings("deprecation")
+public class SeLogin 
+{
+
+	private WebDriver driver;
+	private String baseURL;
+	/***
+	 * This class is to set the home page/ URI
+	 * It will get the browser information, the OS, etc/... from a property file 
+	 */
+	private void setURI()
+	{
+		System.setProperty("webdriver.gecko.driver", "C:\\geckodriver.exe");
+		driver = new FirefoxDriver();
+		
+		//System.setProperty("webdriver.chrome.driver", "C:\\chromedriver.exe");
+		//ChromeOptions options = new ChromeOptions();
+		//options.addArguments("--headless");
+		//ChromeDriver driver = new ChromeDriver(options);
+		
+		//driver = new ChromeDriver();
+		
+		//System.setProperty("webdriver.ie.driver", "C:\\IEDriverServer.exe");
+		//driver = new InternetExplorerDriver();
+		
+		baseURL = "http://seqa.managedmaint.com";
+		//Make sure all existing sessions are killed be fore start.
+		driver.get(baseURL + "/auth/logout");
+		
+		//Fresh login
+		driver.get(baseURL);
+	}
+	
+	private void compareMessage() 
+	{
+		String expectedMessage = "Invalid User Name or Password";
+		String actualMessage = driver.findElement(By.id("ui-id-1")).getText();
+		Assert.assertEquals(actualMessage, expectedMessage);
+		driver.close();
+	}
+	
+@Test(priority=0)
+	public void homePage() 
+	{
+		this.setURI();
+		 try
+		 {
+			 WebElement msg = driver.findElement(By.id("ui-id-1"));
+			 Assert.assertEquals(msg.isDisplayed(),false);
+		 }
+		 catch(Exception e)
+		 {
+			 Assert.assertEquals(true,true); 
+		 }
+		 
+		 driver.close();
+	}
+ @Test(priority=1)
+	public void loginNoEmailNoPasssord()
+	{
+		this.setURI();
+		WebElement email=driver.findElement(By.id("email"));
+        email.sendKeys("");
+        
+        WebElement password=driver.findElement(By.id("password-text"));
+        password.sendKeys("");
+        driver.findElement(By.id("Login")).click();
+        this.compareMessage();
+ 	}
+	
+	@Test(priority=2)
+	public void loginYesEmailNoPasssord()
+	{
+		this.setURI();
+		WebElement email=driver.findElement(By.id("email"));
+        email.sendKeys("someemail@mail.com");
+        
+        WebElement password=driver.findElement(By.id("password-text"));
+        password.sendKeys("");
+        driver.findElement(By.id("Login")).click();
+        this.compareMessage();
+ 	}
+	
+	@Test(priority=3)
+	public void loginNoEmailYesPasssord()
+	{
+		this.setURI();
+		WebElement email=driver.findElement(By.id("email"));
+        email.sendKeys("");
+        
+        WebElement password=driver.findElement(By.id("password-text"));
+        password.sendKeys("yes-password");
+        driver.findElement(By.id("Login")).click();
+        this.compareMessage();
+ 	}
+	
+	@Test(priority=4)
+	public void loginWrongEmailWrongPasssord()
+	{
+		this.setURI();
+		WebElement email=driver.findElement(By.id("email"));
+        email.sendKeys("wrongemail@someemail.com");
+        
+        WebElement password=driver.findElement(By.id("password-text"));
+        password.sendKeys("wrong-password");
+        driver.findElement(By.id("Login")).click();
+        this.compareMessage();
+ 	}
+	
+	
+	@Test(priority=5)
+	public void loginRightEmailWrongPasssord()
+	{
+		this.setURI();
+		WebElement email=driver.findElement(By.id("email"));
+        email.sendKeys("seprototype@managedmaint.com");
+        
+        WebElement password=driver.findElement(By.id("password-text"));
+        password.sendKeys("wrong-password");
+        driver.findElement(By.id("Login")).click();
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        Assert.assertEquals(driver.getCurrentUrl(), baseURL+"/auth/login");
+        driver.close();	
+ 	}
+	
+	
+	@Test(priority=6)
+	public void loginWrongEmailRightPasssord()
+	{
+		this.setURI();
+		WebElement email=driver.findElement(By.id("email"));
+        email.sendKeys("seprototypewron.com");
+        
+        WebElement password=driver.findElement(By.id("password-text"));
+        password.sendKeys("test1234");
+        driver.findElement(By.id("Login")).click();
+        this.compareMessage();
+ 	}
+	
+	@Test(priority=7)
+	public void loginRightgEmailRightPasssord()
+	{
+		this.setURI();
+		WebElement email=driver.findElement(By.id("email"));
+        email.sendKeys("seprototype@managedmaint.com");
+        
+        WebElement password=driver.findElement(By.id("password-text"));
+        password.sendKeys("test1234");
+        driver.findElement(By.id("Login")).click();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        Assert.assertEquals(driver.getCurrentUrl(), baseURL + "/dashboard/");
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.close();
+ 	}
+	
+	@AfterMethod
+	public void takeScreenShotOnFailure(ITestResult testResult) throws IOException {
+		if (testResult.getStatus() == ITestResult.FAILURE) {
+			System.out.println(testResult.getStatus());
+			File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+			File targetFile = new File("C:\\Users\\ksingh\\f.jpeg");
+			Files.copy(scrFile, targetFile);
+	   }        
+	}
+	
+}

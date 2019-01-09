@@ -1,0 +1,82 @@
+package selenium_se;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+//import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+//import org.testng.ITestResult;
+//import org.testng.annotations.AfterMethod;
+//import org.testng.annotations.Test;
+
+import com.google.common.io.Files;
+
+public class SeLogin 
+{
+
+	private WebDriver driver;
+	private String baseURL;
+	/***
+	 * This class is to set the home page/ URI
+	 * It will get the browser information, the OS, etc/... from a property file 
+	 */
+	private void setURI()
+	{
+		System.setProperty("webdriver.gecko.driver", "C:\\geckodriver.exe");
+		driver = new FirefoxDriver();
+		
+		//System.setProperty("webdriver.chrome.driver", "C:\\chromedriver.exe");
+		//ChromeOptions options = new ChromeOptions();
+		//options.addArguments("--headless");
+		//ChromeDriver driver = new ChromeDriver(options);
+		
+		//driver = new ChromeDriver();
+		
+		//System.setProperty("webdriver.ie.driver", "C:\\IEDriverServer.exe");
+		//driver = new InternetExplorerDriver();
+		
+		baseURL  = "http://seqa.managedmaint.com";
+		//Make sure all existing sessions are killed be fore start.
+		driver.get(baseURL + "/auth/logout");
+		
+		//Fresh login
+		driver.get(baseURL);
+	}
+	
+	private void compareMessage() 
+	{
+		String expectedMessage = "Invalid User Name or Password";
+		String actualMessage = driver.findElement(By.id("ui-id-1")).getText();
+		Assert.assertEquals(actualMessage, expectedMessage);
+		driver.close();
+	}
+
+
+//@Test(priority=0)
+public void homePage() 
+{
+	this.setURI();
+	 try
+	 {
+		 WebElement msg = driver.findElement(By.id("ui-id-1"));
+		 Assert.assertEquals(msg.isDisplayed(),false);
+	 }
+	 catch(Exception e)
+	 {
+		 Assert.assertEquals(true,true); 
+	 }
+	 
+	 driver.close();
+}
+}

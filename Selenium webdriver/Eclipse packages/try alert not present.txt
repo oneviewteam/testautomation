@@ -1,0 +1,23 @@
+try 
+	    {
+	        //Handle the alert pop-up using seithTO alert statement
+	        Alert alert1 = driver.switchTo().alert();
+
+	        //Print alert is present
+	        System.out.println("Alert is present");
+
+	        //get the message which is present on pop-up
+	        String message = alert1.getText();
+
+	        //print the pop-up message
+	        System.out.println(message);
+
+	        alert1.sendKeys("");
+	        //Click on OK button on pop-up
+	        alert1.accept();
+	    } 
+	    catch (NoAlertPresentException e) 
+	    {
+	        //if alert is not present print message
+	        System.out.println("alert is not present");
+	    }

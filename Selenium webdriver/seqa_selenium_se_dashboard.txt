@@ -1,0 +1,47 @@
+package MMIPackage;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+public class MyClass {
+	
+	
+
+
+
+	public static void main(String[] args) {
+  // Optional, if not specified, WebDriver will search your path for chromedriver.
+ 
+	
+ 	System.setProperty("webdriver.gecko.driver", "C:\\geckodriver.exe");
+	FirefoxDriver driver = new FirefoxDriver();	
+
+  
+	 driver.get("http://seqa.managedmaint.com/sf/quote");
+     
+     //selenium.waitForPageToLoad("300000000");
+
+     WebElement email=driver.findElement(By.id("email"));
+     email.sendKeys("seprototype@managedmaint.com");
+     
+     WebElement password=driver.findElement(By.id("password-text"));
+     password.sendKeys("test1234");
+     
+     driver.findElement(By.id("Login")).click();
+     driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+     driver.findElement(By.id("topmenuitem_1")).click();
+     driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+     
+   
+  
+     // Should see: "cheese! - Google Search"
+     System.out.println("Page title is: " + driver.getTitle());
+     	
+     
+     //Close the browser
+     //driver.quit();
+ }
+}

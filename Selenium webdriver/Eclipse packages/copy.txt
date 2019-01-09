@@ -1,0 +1,64 @@
+WebElement checkbox = driver.findElement(By.id("jqg_grid_agreement_119169"));
+
+   //If the checkbox is unchecked then isSelected() will return false 
+   //and NOT of false is true, hence we can click on checkbox
+   if(!checkbox.isSelected())
+   	checkbox.click();
+   
+ //System will click the Create Quote button and wait for timeunit seconds
+   driver.findElement(By.id("create_quote")).click();
+   driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+   
+   	//WebElement checkbox1 = driver.findElement(By.id("113920"));
+   	
+   	//WebElement checkbox1 = driver.findElement(By.id("113920"));							
+    //for (int i=0; i<2; i++) {											
+    	//checkbox1.click (); 			
+       // System.out.println("Parent Agreement Checkbox Status is -  "+checkbox1.isSelected());
+   //If the checkbox is unchecked then isSelected() will return false 
+   //and NOT of false is true, hence we can click on checkbox
+   
+  //if(!checkbox1.isSelected())
+     //checkbox1.click();
+     //driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+   
+ //System will click the Create Quote button and wait for timeunit seconds
+   
+   driver.findElement(By.id("createDialogContinue")).click();
+   driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+   
+   driver.findElement(By.id("createDialogContinue")).click();
+   driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+   
+	Alert alt = driver.switchTo().alert();
+	alt.accept();
+   		
+	try 
+    {
+        //Handle the alert pop-up using seithTO alert statement
+        Alert alert1 = driver.switchTo().alert();
+
+        //Print alert is present
+        System.out.println("Alert is present");
+
+        //get the message which is present on pop-up
+        String message = alert1.getText();
+
+        //print the pop-up message
+        System.out.println(message);
+
+        alert1.sendKeys("");
+        //Click on OK button on pop-up
+        alert1.accept();
+    } 
+    catch (NoAlertPresentException e) 
+    {
+        //if alert is not present print message
+        System.out.println("alert is not present");
+
+
+/html/body/div[12]/div[3]/div/button
+    }
+
+/html/body/div[12]/div[1]/button
+     

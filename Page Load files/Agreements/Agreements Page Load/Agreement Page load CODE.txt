@@ -1,0 +1,75 @@
+package selenium_se;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+
+public class AgreementPage {
+	
+	//public Selenium selenium;
+	public WebDriver driver;
+	
+
+	public static void main(String[] args) throws InterruptedException {
+  // Optional, if not specified, WebDriver will search your path for chromedriver.
+ 
+	//System will initialize the gecko.driver for FireFox
+ 	System.setProperty("webdriver.gecko.driver", "C:\\geckodriver.exe");
+	FirefoxDriver driver = new FirefoxDriver();	
+
+  //Driver will fetch the URL for Schneider login page
+	 driver.get("http://seuat.managedmaint.com/auth/login/");
+     
+     //selenium.waitForPageToLoad("300000000");
+//System will find the email id and input the user id as a sendkey
+     WebElement email = driver.findElement(By.id("email"));
+     email.sendKeys("seprototype@managedmaint.com");
+     
+     //System will find the password-text id and input the user password as a sendkey  
+     WebElement password = driver.findElement(By.id("password-text"));
+     password.sendKeys("test1234");
+     
+     //System will click the login button and wait for timeunit seconds
+     driver.findElement(By.id("Login")).click();
+     driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+     
+   //System will click the id for installed base and wait for timeunit seconds
+     driver.findElement(By.id("topmenuitem_31")).click();
+     driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+    
+   //System will click the id for the agreements tab and wait for timeunit seconds
+     driver.findElement(By.id("submenulink_129")).click();
+     driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+     
+     
+   
+  
+     // Should see: "Agreement"
+     System.out.println("Page title is: " + driver.getTitle());
+     
+     
+	}
+     //Close the browser
+     //selenium.waitForPageToLoad("300000000");
+    // driver.set_page_load_timeout(30)
+    // driver.implicitly_wait(90)
+     //WebDriverWait(driver, 30);
+     //driver.set_script_timeout(30)
+     //driver.close();
+ 
+
+
+	private static void WebDriverWait(FirefoxDriver driver2, int i) {
+		// TODO Auto-generated method stub
+		
+	}
+}
+

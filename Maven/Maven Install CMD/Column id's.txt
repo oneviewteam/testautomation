@@ -1,0 +1,68 @@
+<th id="grid_agreement_agreement.CustomerSiteID" 
+
+<li class="ui-state-default ui-element ui-sortable-handle" title="ID" style=""><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>ID<a href="#" class="action"><span class="ui-corner-all ui-icon ui-icon-minus"></span></a></li>
+li.ui-state-default:nth-child(2)
+li.ui-state-default:nth-child(2)
+
+li.ui-state-default:nth-child(18)
+li.ui-state-default:nth-child(18)
+/html/body/div[14]/div[2]/div/div/div[1]/ul/li[2]
+
+<span class="count">33 items selected</span>
+.count
+.count
+0 items selected
+/html/body/div[12]/div[2]/div/div/div[1]/div/span
+/html/body/div[12]/div[2]/div/div/div[1]/div/span
+
+li.ui-state-default:nth-child(2)
+/html/body/div[12]/div[2]/div/div/div[1]/ul/li[2]
+/html/body/div[12]/div[2]/div/div/div[1]/ul/li[3]
+/html/body/div[12]/div[2]/div/div/div[2]/ul/li[10]
+
+<div id="jqgh_grid_agreement_agreement.id" 
+<div id="jqgh_grid_agreement_agreement.CustomerSiteID" 
+<th id="grid_agreement_agreement.ParentAgreementNumber" 
+<th id="grid_agreement_agreement.AgreementTypeID"
+<div id="jqgh_grid_agreement_agreement.StartDate" 
+<div id="jqgh_grid_agreement_agreement.EndDate"
+<th id="grid_agreement_agreement.AgreementTypeID" 
+<div id="jqgh_grid_agreement_agreement.CF_License_Value" 
+<div id="jqgh_grid_agreement_agreement.Estimated_CF_Agreement_Value" 
+<th id="grid_agreement_agreement.Annualized_CF_Agreement_Value" 
+<div id="jqgh_grid_agreement_agreement.CFProgramLevelID" 
+<div id="jqgh_grid_agreement_agreement.TAMFlag" 
+<div id="jqgh_grid_agreement_agreement.Source" 
+<div id="jqgh_grid_agreement_agreement.ActiveFlag" 
+<div id="jqgh_grid_agreement_agreement.DistributorID" 
+<div id="jqgh_grid_agreement_disposition.disposition_code" 
+<div id="jqgh_grid_agreement_disposition.description" 
+<div id="jqgh_grid_agreement_disposition_type.category" 
+<div id="jqgh_grid_agreement_disposition_type.disposition_status" 
+<div id="jqgh_grid_agreement_customer.CustomerType" 
+<div id="jqgh_grid_agreement_customer.Address" 
+<div id="jqgh_grid_agreement_customer.Address2" 
+<div id="jqgh_grid_agreement_customer.City" 
+<div id="jqgh_grid_agreement_customer.StateProv" 
+<div id="jqgh_grid_agreement_customer.PostalCode" 
+<div id="jqgh_grid_agreement_customer.Country" 
+<div id="jqgh_grid_agreement_customer.Region" 
+<div id="jqgh_grid_agreement_customer.CustomerSiteName" 
+<div id="jqgh_grid_agreement_cf_program_level.Description" 
+<div id="jqgh_grid_agreement_distributor.DistributorName" 
+<div id="jqgh_grid_agreement_account.AccountName" 
+<div id="jqgh_grid_agreement_agreement.Days_to_Expiration" 
+
+.search
+ul.available
+<input value="Save" id="savegrid_agreement" style="display: " type="button">
+div.ui-dialog:nth-child(44) > div:nth-child(1) > button:nth-child(2)
+/html/body/div[13]/div[1]/button
+/html/body/div[13]/div[1]/button
+div.ui-dialog:nth-child(45) > div:nth-child(1) > button:nth-child(2)
+<input id="save_name_grid_agreement" type="text">
+/html/body/div[13]/div[1]/button
+/html/body/div[13]/div[1]/button
+/html/body/div[13]/div[1]/button
+/html/body/div[12]/div[1]/button
+/html/body/div[13]/div[1]/button
