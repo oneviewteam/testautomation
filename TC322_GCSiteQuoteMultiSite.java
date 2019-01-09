@@ -3,6 +3,8 @@ package maven1;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+
 //import java.util.Date;
 //import org.apache.poi.ss.usermodel.Sheet;
 //import org.apache.poi.ss.usermodel.Cell;
@@ -20,28 +22,33 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.ITestResult;
-import org.testng.annotations.Test;
+//import org.testng.annotations.Test;
 
 public class TC322_GCSiteQuoteMultiSite{
 
-WebDriver driver;
+//WebDriver driver;
+	public Select selenium;
+	public static WebDriver driver;
 	
 	/*
 	 * Create a quote from agreement
 	 * 
 	*/
-	@Test(priority=1)
-	public  void quoteFromAgreement() throws Throwable {
+	//@Test(priority=1)
+	//public  void quoteFromAgreement() throws Throwable {
+public static void main(String[] args) throws IOException, InterruptedException { 
 		
 		
 		//System.setProperty("webdriver.chrome.driver", "C:\\mmi_auto_testing\\bin\\chromedriver.exe");
-		System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
-		//System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
+		//System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
+		System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
 		driver=new FirefoxDriver();
 		//driver=new ChromeDriver();
 		driver.manage().window().maximize();
+		Thread.sleep(2000);
 		
-		File src=new File("C:\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
+		File src=new File("C:\\mmi_automation\\mmi_auto_testing_AdvancedSearch\\data\\AdvancedSearch_SEAutoTesting.xlsx");
+		//File src=new File("\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
 		//File src=new File("SEAutoTesting.xlsx");
 		
 		FileInputStream fis=new FileInputStream(src);
@@ -63,6 +70,7 @@ WebDriver driver;
 		int globalCustomerSiteQuoteId;
 		int globalCustomerSiteQuoteId2;
 		int globalCustomerSiteQuoteId3;
+		
 		//String agreementType;
 		//String cFProgramLevel;
 		//String startDate;
@@ -81,6 +89,8 @@ WebDriver driver;
 			loginUrl =baseUrl + "/auth/login"; 
 			testUsername =sheet1.getRow(1).getCell(1).getStringCellValue();
 			testPassword =sheet1.getRow(1).getCell(2).getStringCellValue();
+			
+			
 			globalCustomerSiteQuoteId  = (int) sheet1.getRow(1).getCell(3).getNumericCellValue();
 			globalCustomerSiteQuoteId2  = (int) sheet1.getRow(1).getCell(4).getNumericCellValue();
 			globalCustomerSiteQuoteId3  = (int) sheet1.getRow(1).getCell(5).getNumericCellValue();
@@ -95,27 +105,28 @@ WebDriver driver;
 			Thread.sleep(2000);
 			driver.get(loginUrl);
 			Thread.sleep(2000);
+			driver.findElement(By.id("email")).clear();
 			driver.findElement(By.id("email")).sendKeys(testUsername);
 			Thread.sleep(2000);
-			//Actions actions = new Actions(driver);
+			
 			driver.findElement(By.id("password-text")).sendKeys(testPassword);
 			Thread.sleep(2000);
 			
 			//Click the Login button
 			driver.findElement(By.id("Login")).click();
-			Thread.sleep(12000);
+			Thread.sleep(10000);
 					
 		   // agreementUrl = baseUrl + "/sf/" + gridTitle;
 			// driver.get(agreementUrl);
 		
 			//Click on " Installed Base" tab 
 			driver.findElement(By.id("topmenuitem_31")).click();  
-			Thread.sleep(4000);
+			Thread.sleep(8000);
 			
 			//Click on the Agreements tab
 			Boolean actualResult =  false;
 			actualResult =  driver.findElements(By.id("submenulink_157")).size() >0;
-			Thread.sleep(4000);
+			Thread.sleep(6000);
 			
 			//Assert.assertTrue(actualResult);
 			if( ! actualResult)
@@ -140,7 +151,7 @@ WebDriver driver;
 			
 			//Click on " Agreements" icon from sub-menu
 			 driver.findElement(By.id("submenulink_157")).click();
-			 Thread.sleep(6000);
+			 Thread.sleep(8000);
 			 
 			 if(driver.findElements(By.id("cancelMaingrid_agreement")).size()>0) 
 			 {				 
@@ -156,7 +167,7 @@ WebDriver driver;
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
 					wb.close();	
-					System.out.println("Page search for: " + driver.getTitle() + "needs to be cleared");
+					//System.out.println("Page search for: " + driver.getTitle() + "needs to be cleared");
 				}
 				else
 				{
@@ -175,15 +186,15 @@ WebDriver driver;
 			 	Thread.sleep(6000);}
 			
 				driver.findElement(By.id("advSrch_grid_customer_all")).click();
-				Thread.sleep(4000);
+				Thread.sleep(6000);
 	
 				driver.findElement(By.linkText("CustomerSiteID")).click();
-				Thread.sleep(3000);
+				Thread.sleep(4000);
 			
 				
 				//new Select(driver.findElement(By.id("customer_id"))).selectByVisibleText("Contains");
 				new Select(driver.findElement(By.id("customer_view__id"))).selectByVisibleText("Between");
-				Thread.sleep(3000);
+				Thread.sleep(4000);
 				
 				
 				//Find the ID search filter box and click that in that box
@@ -243,7 +254,7 @@ WebDriver driver;
 					sheet1.getRow(5).createCell(8).setCellValue("'Global Customer Site Id was Selected");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					driver.findElement(By.id("jqg_grid_customer_all_" + String.valueOf(globalCustomerSiteQuoteId))).click();
+					driver.findElement(By.id("jqg_grid_" + gridTitle + "_" + String.valueOf(globalCustomerSiteQuoteId))).click();
 					Thread.sleep(3000);
 				}
 				//
@@ -258,7 +269,7 @@ WebDriver driver;
 				{
 						driver.findElement(By.id("next_grid_" + gridTitle + "-gridpager")).click();
 					    pageCounter++;
-						Thread.sleep(3000);
+						Thread.sleep(4000);
 				}
 				}
 				if (!findElementPage2)
@@ -276,7 +287,7 @@ WebDriver driver;
 					sheet1.getRow(5).createCell(8).setCellValue("'Global Customer Site Id was Selected");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					driver.findElement(By.id("jqg_grid_customer_all_" + String.valueOf(globalCustomerSiteQuoteId2))).click();
+					driver.findElement(By.id("jqg_grid_" + gridTitle + "_" + String.valueOf(globalCustomerSiteQuoteId2))).click();
 					Thread.sleep(3000);
 				}
 				//
@@ -291,7 +302,7 @@ WebDriver driver;
 				{
 						driver.findElement(By.id("next_grid_" + gridTitle + "-gridpager")).click();
 					    pageCounter++;
-						Thread.sleep(3000);
+						Thread.sleep(4000);
 				}
 				}
 				if (!findElementPage3)
@@ -309,7 +320,7 @@ WebDriver driver;
 					sheet1.getRow(5).createCell(8).setCellValue("'Global Customer Site Id was Selected");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					driver.findElement(By.id("jqg_grid_customer_all_" + String.valueOf(globalCustomerSiteQuoteId3))).click();
+					driver.findElement(By.id("jqg_grid_" + gridTitle + "_" + String.valueOf(globalCustomerSiteQuoteId3))).click();
 					Thread.sleep(3000);
 				}
 			
@@ -337,16 +348,16 @@ WebDriver driver;
 					sheet1.getRow(6).createCell(8).setCellValue("Parent Checkbox Page was Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					Thread.sleep(2000);
-					driver.findElement(By.xpath("//html/body/div[10]/div[2]/form/table/tbody/tr[1]/td[1]/input")).click();
+					Thread.sleep(3000);
+					driver.findElement(By.xpath("//html/body/div[9]/div[2]/form/table/tbody/tr[1]/td[1]/input")).click();
 					//driver.findElement(By.name("parent")).click();
-					Thread.sleep(2000);
-					driver.findElement(By.xpath("//html/body/div[10]/div[2]/form/table/tbody/tr[2]/td[1]/input")).click();
+					Thread.sleep(3000);
+					driver.findElement(By.xpath("//html/body/div[9]/div[2]/form/table/tbody/tr[2]/td[1]/input")).click();
 					//driver.findElement(By.name("parent")).click();
-					Thread.sleep(2000);
-					driver.findElement(By.xpath("//html/body/div[10]/div[2]/form/table/tbody/tr[3]/td[1]/input")).click();
+					Thread.sleep(3000);
+					driver.findElement(By.xpath("//html/body/div[9]/div[2]/form/table/tbody/tr[3]/td[1]/input")).click();
 					//driver.findElement(By.name("parent")).click();
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 				}
 				
 			
@@ -364,7 +375,7 @@ WebDriver driver;
 				//Thread.sleep(3000);
 				
 				//Continue button should be displayed and selected
-				Boolean confirmation1 = driver.findElements(By.xpath("//html/body/div[10]/div[3]/div/button[2]")).size() >0;
+				Boolean confirmation1 = driver.findElements(By.xpath("//html/body/div[9]/div[3]/div/button[2]")).size() >0;
 				
 				
 				if ( ! confirmation1)
@@ -383,13 +394,13 @@ WebDriver driver;
 					sheet1.getRow(7).createCell(9).setCellValue("PASSED");
 					sheet1.getRow(7).createCell(8).setCellValue("Confirmation page was Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
-					driver.findElement(By.xpath("//html/body/div[10]/div[3]/div/button[2]")).click();
+					driver.findElement(By.xpath("//html/body/div[9]/div[3]/div/button[2]")).click();
 					Thread.sleep(3000);
 					wb.write(fout);
 					}
 				
 				//Email confirmation page will pop up and "OK" button is selected
-				Boolean confirmationEmail = driver.findElements(By.xpath("/html/body/div[12]/div[3]/div/button")).size() >0;
+				Boolean confirmationEmail = driver.findElements(By.xpath("//html/body/div[11]/div[3]/div/button")).size() >0;
 				
 				
 				if ( ! confirmationEmail)
@@ -409,7 +420,7 @@ WebDriver driver;
 					sheet1.getRow(8).createCell(8).setCellValue("Global Customer Site Grid' was Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					driver.findElement(By.xpath("//html/body/div[12]/div[3]/div/button")).click();
+					driver.findElement(By.xpath("//html/body/div[11]/div[3]/div/button")).click();
 					Thread.sleep(3000);
 					//Clear search conditions and refresh the customer site grid
 					driver.findElement(By.id("cancelMaingrid_customer_all")).click();

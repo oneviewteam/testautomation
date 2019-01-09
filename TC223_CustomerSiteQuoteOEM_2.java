@@ -3,6 +3,8 @@ package maven1;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+
 //import java.util.Date;
 //import org.apache.poi.ss.usermodel.Sheet;
 //import org.apache.poi.ss.usermodel.Cell;
@@ -20,29 +22,33 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.ITestResult;
-import org.testng.annotations.Test;
+//import org.testng.annotations.Test;
 
 public class TC223_CustomerSiteQuoteOEM_2 {
 
-WebDriver driver;
+//WebDriver driver;
+	public Select selenium;
+	public static WebDriver driver;
 	
 	/*
 	 * Create a quote from agreement
 	 * 
 	*/
-	@Test(priority=1)
-	public  void quoteFromAgreement() throws Throwable {
-		// TODO Auto-generated method stub
+	//@Test(priority=1)
+	//public  void quoteFromAgreement() throws Throwable {
+		
+public static void main(String[] args) throws IOException, InterruptedException { 
 		
 		//System.setProperty("webdriver.chrome.driver", "C:\\mmi_auto_testing\\bin\\chromedriver.exe");
-		System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
-		//System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
+		//System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
+		System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
 		driver=new FirefoxDriver();
 		//driver=new ChromeDriver();
 		driver.manage().window().maximize();
+		Thread.sleep(2000);
 		
-		File src=new File("C:\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
-		//File src=new File("SEAutoTesting.xlsx");
+		File src=new File("C:\\mmi_automation\\mmi_auto_testing_AdvancedSearch\\data\\AdvancedSearch_SEAutoTesting.xlsx");
+		//File src=new File("\\mmi_autotesting\\data\\SEAutoTesting.xlsx");
 		
 		FileInputStream fis=new FileInputStream(src);
 		
@@ -99,7 +105,7 @@ WebDriver driver;
 			
 			//Click the Login button
 			driver.findElement(By.id("Login")).click();
-			Thread.sleep(12000);
+			Thread.sleep(10000);
 					
 		   // agreementUrl = baseUrl + "/sf/" + gridTitle;
 			// driver.get(agreementUrl);
@@ -317,22 +323,21 @@ WebDriver driver;
 					
 				Boolean findElementPage = false;
 				pageCounter = 1;
-				//sp_1_grid_agreement-gridpager  //Total pages
-				//pg_input_bottom_grid_agreement //Actual page number
+				
 				customerSiteQuoteId = (int) sheet1.getRow(1).getCell(3).getNumericCellValue();
-				while( !findElementPage  &&  !String.valueOf(pageCounter).equals(numPages))
+				while( ! findElementPage  &&  !String.valueOf(pageCounter).equals(numPages))
 					
 				{
 					findElementPage = driver.findElements(By.id("jqg_grid_" + gridTitle + "_" + String.valueOf(customerSiteQuoteId))).size() >0;
 					
-				if(! findElementPage )
+				if( ! findElementPage )
 				{
-						driver.findElement(By.id("next_grid_" + gridTitle + "-gridpager")).click();
-					    pageCounter++;
-						Thread.sleep(3000);
+				driver.findElement(By.id("next_grid_" + gridTitle + "-gridpager")).click();
+			    pageCounter++;
+				Thread.sleep(3000);
 				}
 				}
-				if (!findElementPage)
+				if (  ! findElementPage)
 				{
 					sheet1.getRow(11).createCell(9).setCellValue("FAILED");
 					sheet1.getRow(11).createCell(8).setCellValue("'Create Quote' was NOT Initiated");
@@ -348,7 +353,7 @@ WebDriver driver;
 					sheet1.getRow(11).createCell(8).setCellValue("'Create Quote' was Initiated");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					driver.findElement(By.id("jqg_grid_customer_" + String.valueOf(customerSiteQuoteId))).click();
+					driver.findElement(By.id("jqg_grid_" + gridTitle + "_" + String.valueOf(customerSiteQuoteId))).click();
 					Thread.sleep(2000);
 					driver.findElement(By.id("create_quote")).click();
 					Thread.sleep(2000);
@@ -383,20 +388,22 @@ WebDriver driver;
 					Thread.sleep(2000);
 					new Select(driver.findElement(By.name("cfProgramLevel"))).selectByVisibleText(String.valueOf(cFProgramLevel));
 					Thread.sleep(2000);
-					//WebElement fromDateBox= driver.findElement(By.name("StartDate"));
-					WebElement fromDateBox= driver.findElement(By.cssSelector(".datepicker_start"));
+					WebElement fromDateBox= driver.findElement(By.name("StartDate"));
+					//WebElement fromDateBox= driver.findElement(By.cssSelector(".datepicker_start"));
+					driver.findElement(By.name("StartDate")).click();
 					fromDateBox.clear();
 					fromDateBox.sendKeys(String.valueOf(startDate));
 					Thread.sleep(2000);
-					//WebElement fromDateBox1= driver.findElement(By.name("EndDate"));
-					WebElement fromDateBox1= driver.findElement(By.cssSelector(".datepicker_end"));
+					WebElement fromDateBox1= driver.findElement(By.name("EndDate"));
+					//WebElement fromDateBox1= driver.findElement(By.cssSelector(".datepicker_end"));
+					driver.findElement(By.name("EndDate")).click();
 					fromDateBox1.clear();
 					fromDateBox1.sendKeys(String.valueOf(endDate));
 					Thread.sleep(2000);
 				}
 				
 				//Continue button should be displayed and selected
-				Boolean confirmation1 = driver.findElements(By.xpath("//html/body/div[10]/div[3]/div/button[2]")).size() >0;
+				Boolean confirmation1 = driver.findElements(By.xpath("//button[contains(.,'Continue')]")).size() >0;
 				
 				if ( ! confirmation1)
 				{
@@ -415,13 +422,13 @@ WebDriver driver;
 					sheet1.getRow(13).createCell(8).setCellValue("Confirmation page was Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					driver.findElement(By.xpath("//html/body/div[10]/div[3]/div/button[2]")).click();
+					driver.findElement(By.xpath("//button[contains(.,'Continue')]")).click();
 					Thread.sleep(3000);
 					
 					}
 				
 				//Email confirmation page will pop up and "OK" button is selected
-				Boolean confirmationEmail = driver.findElements(By.xpath("//html/body/div[12]/div[3]/div/button")).size() >0;
+				Boolean confirmationEmail = driver.findElements(By.xpath("//button[contains(.,'OK')]")).size() >0;
 				
 				if ( ! confirmationEmail)
 				{
@@ -440,7 +447,7 @@ WebDriver driver;
 					sheet1.getRow(14).createCell(8).setCellValue("Customer Site Grid' was Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					driver.findElement(By.xpath("//html/body/div[12]/div[3]/div/button")).click();
+					driver.findElement(By.xpath("//button[contains(.,'OK')]")).click();
 					Thread.sleep(3000);
 					//Clear search conditions and refresh the customer site grid
 					driver.findElement(By.id("cancelMaingrid_customer")).click();

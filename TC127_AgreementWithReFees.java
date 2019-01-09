@@ -3,48 +3,46 @@ package maven1;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-
-
+import java.io.IOException;
 
 //import org.apache.poi.ss.usermodel.Sheet;
 //import org.apache.poi.ss.usermodel.Cell;
 
-//import org.apache.poi.xssf.usermodel.XSSFFont
-//import org.apache.poi.ss.usermodel.CellStyle;
-//import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFColor;
-import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
+import org.openqa.selenium.support.ui.Select;
 import org.testng.ITestResult;
-import org.testng.annotations.Test;
+//import org.testng.annotations.Test;
 
 public class TC127_AgreementWithReFees {
 
-WebDriver driver;
+//WebDriver driver;
+	public Select selenium;
+	public static WebDriver driver;
 	
 	/*
 	 * Create a quote from agreement
 	 * 
 	*/
-	@Test(priority=1)
-	public  void quoteFromAgreement() throws Throwable {
-		// TODO Auto-generated method stub
+	//@Test(priority=1)
+	//public  void quoteFromAgreement() throws Throwable {
+		
+public static void main(String[] args) throws IOException, InterruptedException { 
 		
 		//System.setProperty("webdriver.chrome.driver", "C:\\mmi_auto_testing\\bin\\chromedriver.exe");
-		System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
-		//System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
+		//System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
+		System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
 		driver=new FirefoxDriver();
 		//driver=new ChromeDriver();
 		driver.manage().window().maximize();
+		Thread.sleep(2000);
 		
-		File src=new File("C:\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
-		//File src=new File("SEAutoTesting.xlsx");
+		//File src=new File("C:\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
+		File src=new File("C:\\mmi_automation\\mmi_auto_testing_AdvancedSearch\\data\\AdvancedSearch_SEAutoTesting.xlsx");
+		//File src=new File("data\\SEAutoTesting.xlsx");
 		
 		FileInputStream fis=new FileInputStream(src);
 		
@@ -57,20 +55,7 @@ WebDriver driver;
 		XSSFSheet sheet1=wb.getSheet("TC127");
 		XSSFSheet sheet2=wb.getSheet("SC1_DATA");
 		
-		wb.createCellStyle();
-		//XSSFCellStyle style = wb.createCellStyle();
-		//style.setFillForegroundColor(IndexedColors.GREEN.getIndex());
-		XSSFCellStyle cellStyle = wb.createCellStyle();        
-	    XSSFFont font = wb.createFont();
-	     font.setFontName(XSSFFont.DEFAULT_FONT_NAME);
-	     font.setFontHeightInPoints((short)10);
-	     //font.setColor(IndexedColorMap.green.getIndex());
-	     // #F0122D   = red
-	     XSSFColor red = new XSSFColor(new java.awt.Color(240,18,45));  
-	     cellStyle.setFillForegroundColor(red);
-	     // #2DF10E = green
-	     XSSFColor green =new XSSFColor(new java.awt.Color(45,241,14));
-	     cellStyle.setFillForegroundColor(green);
+		
 		
 		String baseUrl ;
 		String loginUrl; 
@@ -79,6 +64,7 @@ WebDriver driver;
 		String testPassword ;
 		int agreementReFeesId ;
 		//int agreementTypeId ;
+		int pageCounter;
 		String numPages;
 		String gridTitle = "agreement";
 	
@@ -95,14 +81,19 @@ WebDriver driver;
 			// String testQuoteUrl =sheet1.getRow(1).getCell(3).getStringCellValue();
 			
 			driver.get(logoutUrl);
+			Thread.sleep(2000);
 			driver.get(loginUrl);
+			Thread.sleep(2000);
+			driver.findElement(By.id("email")).clear();
 			driver.findElement(By.id("email")).sendKeys(testUsername);
-			//Actions actions = new Actions(driver);
+			Thread.sleep(2000);
+			
 			driver.findElement(By.id("password-text")).sendKeys(testPassword);
+			Thread.sleep(2000);
 			
 			//Click the Login button
 			driver.findElement(By.id("Login")).click();
-			Thread.sleep(12000);
+			Thread.sleep(10000);
 					
 		   // agreementUrl = baseUrl + "/sf/" + gridTitle;
 			// driver.get(agreementUrl);
@@ -188,13 +179,12 @@ WebDriver driver;
 				 
 			 }
 			 
-			 //Find the Andvance search link and click that link
+			 //Find the Advance search link and click that link
 				Boolean advSrch = driver.findElements(By.id("advSrch_grid_agreement")).size()>0;
 				
 				if ( ! advSrch)
 				{
 					sheet1.getRow(6).createCell(9).setCellValue("FAILED");
-					cellStyle.setFillForegroundColor(green);
 					sheet1.getRow(6).createCell(8).setCellValue("'Advanced Serarch' was NOT Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
@@ -309,10 +299,32 @@ WebDriver driver;
 					Thread.sleep(3000);
 					}
 				
-				//Select the check box and click [Create Quote] button
-				driver.findElement(By.id("jqg_grid_agreement_" + String.valueOf(agreementReFeesId))).click();
-				Thread.sleep(3000);
+				//Search the grid and find the agreement ID
+				Boolean findElementPage = false;
+				pageCounter = 1;
 				
+				agreementReFeesId = (int) sheet1.getRow(1).getCell(3).getNumericCellValue();
+				while( ! findElementPage  &&  !String.valueOf(pageCounter).equals(numPages))
+					
+				{findElementPage = driver.findElements(By.id("jqg_grid_" + gridTitle + "_" + String.valueOf(agreementReFeesId))).size() >0;
+					
+				
+				if( ! findElementPage )
+				{
+				driver.findElement(By.id("next_grid_" + gridTitle + "-gridpager")).click();
+			    pageCounter++;
+				Thread.sleep(3000);
+				}
+				}
+				
+				if( findElementPage )
+				{				
+				//Select the check box 
+				driver.findElement(By.id("jqg_grid_" + gridTitle + "_" + String.valueOf(agreementReFeesId))).click();
+				Thread.sleep(3000);
+				}
+				
+				//Click [Create Quote] button
 				Boolean CreateQuote = driver.findElements(By.id("create_quote")).size() >0;
 			
 				if ( ! CreateQuote)
@@ -369,8 +381,8 @@ WebDriver driver;
 				Thread.sleep(2000);}
 				
 				//Click "OK" on the email confirmation pop up page
-				Boolean confirmation1 = driver.findElements(By.id("ui-id-6")).size() >0;
-				
+				Boolean confirmation1 = driver.findElements(By.xpath("//html/body/div[12]/div[3]/div/button")).size() >0;
+				Thread.sleep(1000);
 				if ( ! confirmation1)
 				{
 				
@@ -388,7 +400,7 @@ WebDriver driver;
 					sheet1.getRow(13).createCell(8).setCellValue("'Quote is being Processed' was Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					driver.findElement(By.xpath("//html/body/div[13]/div[3]/div/button")).click();
+					driver.findElement(By.xpath("//html/body/div[12]/div[3]/div/button")).click();
 					Thread.sleep(3000);
 					}
 			

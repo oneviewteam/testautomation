@@ -3,6 +3,10 @@ package maven1;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+
+import org.apache.commons.io.FileUtils;
 
 //import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 //import org.apache.poi.hssf.util.HSSFColor;
@@ -10,14 +14,20 @@ import java.io.FileOutputStream;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+//import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 public class TC111_SELogin_Agreement {
 	
-WebDriver driver;
+	public Select selenium;
+	public static WebDriver driver;
 
 	
 	/*
@@ -25,22 +35,30 @@ WebDriver driver;
 	 * 
 	
 	*/
-	@Test(priority=1)
-	public  void quoteFromAgreement() throws Throwable {
-		// TODO Auto-generated method stub
+@Test(priority=1)
+    public static void main(String[] args) throws IOException, InterruptedException { 
+    
+
 		
 		//System.setProperty("webdriver.chrome.driver", "C:\\mmi_auto_testing\\bin\\chromedriver.exe");
-		System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
-		//System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
+		//System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
+		System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
+		//System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+	
 		driver=new FirefoxDriver();
 		//driver=new ChromeDriver();
 		driver.manage().window().maximize();
+		Thread.sleep(2000);
 		
-		File src=new File("C:\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
+		//((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+		File src=new File("C:\\mmi_automation\\mmi_auto_testing_AdvancedSearch\\data\\AdvancedSearch_SEAutoTesting.xlsx");
 		//File src=new File("SEAutoTesting.xlsx");
+	
+		//FileUtils.copyFile(src, new File("C:\\mmi_automation\\mmi_auto_testing_AdvancedSearch\\output\\Screenshots"+System.currentTimeMillis()+".jpg"));  
 		
 		FileInputStream fis=new FileInputStream(src);
 		
+		//TC111_SELogin_Agreement.captureScreenShot(driver);
 		XSSFWorkbook wb=new XSSFWorkbook(fis);
 		
 		//get sheet at index
@@ -77,9 +95,12 @@ WebDriver driver;
 			
 			
 			driver.get(logoutUrl);
+			Thread.sleep(2000);
 			driver.get(loginUrl);
+			Thread.sleep(2000);
+			driver.findElement(By.id("email")).clear();
 			driver.findElement(By.id("email")).sendKeys(testUsername);
-			Thread.sleep(3000);
+			Thread.sleep(2000);
 			
 			Boolean actualResult = driver.findElements(By.id("email")).size()>0; 
 			
@@ -87,12 +108,11 @@ WebDriver driver;
 		          //login.click();
 		          //Main Event is logged If Passed
 		          {
-				
-				
 						sheet1.getRow(4).createCell(9).setCellValue("FAILED");
 						sheet1.getRow(4).createCell(8).setCellValue("Username was NOT Input");
-												
-						FileOutputStream fout=new FileOutputStream(src);
+						File src1= ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);						
+						FileOutputStream fout=new FileOutputStream(src1);
+						
 						wb.write(fout);
 						wb.close();	
 						driver.quit();
@@ -162,7 +182,7 @@ WebDriver driver;
 					}
 			
 			driver.findElement(By.id("Login")).click();
-			Thread.sleep(12000);
+			Thread.sleep(15000);
 			
 			Boolean actualResult3 =  driver.findElements(By.id("dashboard")).size() >0;
 			//Assert.assertTrue(actualResult);
@@ -170,6 +190,10 @@ WebDriver driver;
 			{
 				sheet1.getRow(7).createCell(9).setCellValue("FAILED");
 				sheet1.getRow(7).createCell(8).setCellValue("Dashboard was not found");
+				//TC111_SELogin_Agreement.captureScreenShot(driver);
+				//FileUtils.copyFile(src, new File("C:\\mmi_automation\\mmi_auto_testing_AdvancedSearch\\output\\Screenshots"+System.currentTimeMillis()+".jpg"));
+				//File src1= ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);	
+			
 				FileOutputStream fout=new FileOutputStream(src);
 				wb.write(fout);
 				wb.close();	
@@ -188,31 +212,27 @@ WebDriver driver;
 			
 
 					
-		   // agreementUrl = baseUrl + "/sf/" + gridTitle;
-			// driver.get(agreementUrl);
-			
+		
 			
 		
 	    wb.close();	
-		driver.quit();
-	}	
-	public void quoteFromAgreementWithParent() throws Throwable	{
-		
-	}
-
-
-	//@AfterMethod
-	public void tearDown(ITestResult result)
+		//driver.quit();
+}
 	
-	{
-		
-		if(ITestResult.FAILURE==result.getStatus())
-		{
-			//Utility.captureScreenshot(driver, result.getName());
-		}
-		
-		driver.quit();
-	}
+	
 
+
+	@AfterMethod
+		public void takeScreenShotOnFailure(ITestResult testResult) throws IOException {
+			if (testResult.getStatus() == ITestResult.FAILURE) {
+				System.out.println(testResult.getStatus());
+				File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+				FileUtils.copyFile(scrFile, new File("C:\\mmi_automation\\mmi_auto_testing_AdvancedSearch\\output\\" + testResult.getName() + "-" 
+						+ Arrays.toString(testResult.getParameters()) +  ".jpg"));
+		   }        
+		}
+
+	
 
 }
+

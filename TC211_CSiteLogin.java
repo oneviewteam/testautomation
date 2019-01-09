@@ -3,21 +3,22 @@ package maven1;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-
+import java.io.IOException;
 //import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 //import org.apache.poi.hssf.util.HSSFColor;
-
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.ITestResult;
-import org.testng.annotations.Test;
+//import org.testng.annotations.Test;
 
 public class TC211_CSiteLogin {
 	
-WebDriver driver;
+	public Select selenium;
+	public static WebDriver driver;
 
 	
 	/*
@@ -25,19 +26,23 @@ WebDriver driver;
 	 * 
 	
 	*/
-	@Test(priority=1)
-	public  void quoteFromAgreement() throws Throwable {
-		// TODO Auto-generated method stub
+	//@Test(priority=1)
+
+	public static void main(String[] args) throws IOException, InterruptedException { 
+	//public  void quoteFromAgreement() throws Throwable {
+		
 		
 		//System.setProperty("webdriver.chrome.driver", "C:\\mmi_auto_testing\\bin\\chromedriver.exe");
-		System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
-		//System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
+		//System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
+		System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
 		driver=new FirefoxDriver();
 		//driver=new ChromeDriver();
 		driver.manage().window().maximize();
+		Thread.sleep(2000);
 		
-		File src=new File("C:\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
-		//File src=new File("SEAutoTesting.xlsx");
+		//File src=new File("C:\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
+		File src=new File("C:\\mmi_automation\\mmi_auto_testing_AdvancedSearch\\data\\AdvancedSearch_SEAutoTesting.xlsx");
+		//File src=new File("data\\SEAutoTesting.xlsx");
 		
 		FileInputStream fis=new FileInputStream(src);
 		
@@ -77,9 +82,13 @@ WebDriver driver;
 			
 			
 			driver.get(logoutUrl);
+			Thread.sleep(2000);
 			driver.get(loginUrl);
+			Thread.sleep(2000);
+			driver.findElement(By.id("email")).clear();
 			driver.findElement(By.id("email")).sendKeys(testUsername);
-			Thread.sleep(3000);
+			Thread.sleep(2000);
+		
 			
 			Boolean actualResult = driver.findElements(By.id("email")).size()>0; 
 			
@@ -119,9 +128,7 @@ WebDriver driver;
 						wb.write(fout);
 						wb.close();	
 						driver.quit();
-						
-						
-					}
+				   }
 			
 			else 
 					{
@@ -160,7 +167,7 @@ WebDriver driver;
 					}
 			
 			driver.findElement(By.id("Login")).click();
-			Thread.sleep(14000);
+			Thread.sleep(10000);
 			
 			Boolean actualResult3 =  driver.findElements(By.id("dashboard")).size() >0;
 			//Assert.assertTrue(actualResult);

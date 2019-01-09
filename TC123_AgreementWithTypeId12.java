@@ -3,8 +3,7 @@ package maven1;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-
-
+import java.io.IOException;
 
 //import org.apache.poi.ss.usermodel.Sheet;
 //import org.apache.poi.ss.usermodel.Cell;
@@ -20,32 +19,39 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
+import org.openqa.selenium.support.ui.Select;
 import org.testng.ITestResult;
-import org.testng.annotations.Test;
+//import org.testng.annotations.Test;
 
 
 public class TC123_AgreementWithTypeId12 {
 	
-WebDriver driver;
+//WebDriver driver;
+	public Select selenium;
+	public static WebDriver driver;
+	
 	
 	/*Create a quote from agreement
 	 * 
 	*/
 
-	@Test(priority=1)
-	public  void quoteFromAgreement() throws Throwable {
-		// TODO Auto-generated method stub
+	//@Test(priority=1)
+	//public  void quoteFromAgreement() throws Throwable {
+		
+	@SuppressWarnings("resource")
+	public static void main(String[] args) throws IOException, InterruptedException { 
 		
 		//System.setProperty("webdriver.chrome.driver", "C:\\mmi_auto_testing\\bin\\chromedriver.exe");
-		System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
-		//System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
+		//System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
+		System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
 		driver=new FirefoxDriver();
 		//driver=new ChromeDriver();
 		driver.manage().window().maximize();
+		Thread.sleep(2000);
 		
-		File src=new File("C:\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
-		//File src=new File("SEAutoTesting.xlsx");
+		//File src=new File("C:\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
+		File src=new File("C:\\mmi_automation\\mmi_auto_testing_AdvancedSearch\\data\\AdvancedSearch_SEAutoTesting.xlsx");
+		//File src=new File("data\\SEAutoTesting.xlsx");
 		
 		FileInputStream fis=new FileInputStream(src);
 		
@@ -80,6 +86,7 @@ WebDriver driver;
 		String testPassword ;
 		int agreementId ;
 		int agreementTypeId ;
+		int pageCounter;
 		String numPages;
 		String gridTitle = "agreement";
 	
@@ -96,14 +103,19 @@ WebDriver driver;
 			// String testQuoteUrl =sheet1.getRow(1).getCell(3).getStringCellValue();
 			
 			driver.get(logoutUrl);
+			Thread.sleep(2000);
 			driver.get(loginUrl);
+			Thread.sleep(2000);
+			driver.findElement(By.id("email")).clear();
 			driver.findElement(By.id("email")).sendKeys(testUsername);
+			Thread.sleep(2000);
 			//Actions actions = new Actions(driver);
 			driver.findElement(By.id("password-text")).sendKeys(testPassword);
+			Thread.sleep(2000);
 			
 			//Click the Login button
 			driver.findElement(By.id("Login")).click();
-			Thread.sleep(12000);
+			Thread.sleep(10000);
 					
 		   // agreementUrl = baseUrl + "/sf/" + gridTitle;
 			// driver.get(agreementUrl);
@@ -113,7 +125,7 @@ WebDriver driver;
 			Thread.sleep(7000);
 			
 			//Click on the Agreements tab
-			Boolean actualResult =  driver.findElements(By.id("submenulink_129")).size() >0;
+			boolean actualResult =  driver.findElements(By.id("submenulink_129")).size() >0;
 			Thread.sleep(5000);
 			
 			//Assert.assertTrue(actualResult);
@@ -124,8 +136,8 @@ WebDriver driver;
 				sheet1.getRow(3).createCell(8).setCellValue("Agreements Tab Submenu was NOT found");
 				FileOutputStream fout=new FileOutputStream(src);
 				wb.write(fout);
-				wb.close();	
-				driver.quit();
+				//wb.close();	
+				//driver.quit();
 
 			}
 			else
@@ -155,7 +167,7 @@ WebDriver driver;
 					sheet1.getRow(4).createCell(8).setCellValue("Empty Grid");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					wb.close();	
+					//wb.close();	
 					System.out.println("Page search for: " + driver.getTitle() + "needs to be cleared");
 				}
 				else
@@ -187,7 +199,7 @@ WebDriver driver;
 			 }
 			 
 				//Find the Advance search link and click that link
-				Boolean advSrch = driver.findElements(By.id("advSrch_grid_agreement")).size() >0;
+				boolean advSrch = driver.findElements(By.id("advSrch_grid_agreement")).size() >0;
 				
 				if ( ! advSrch)
 				{
@@ -195,8 +207,8 @@ WebDriver driver;
 					sheet1.getRow(6).createCell(8).setCellValue("'Advanced Serarch' was NOT Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					wb.close();	
-					driver.quit();
+					//wb.close();	
+					//driver.quit();
 				}
 				else
 				{
@@ -207,94 +219,34 @@ WebDriver driver;
 					driver.findElement(By.id("advSrch_grid_agreement")).click();
 					}
 				
-				//Find the Agreement Type ID filter button link and click that link
-				Boolean AgreeTypeIdButton = driver.findElements(By.linkText("AgreementTypeID")).size() >0;
-				Thread.sleep(3000);
-				
-				if ( ! AgreeTypeIdButton)
-				{
-					
-					sheet1.getRow(7).createCell(9).setCellValue("FAILED");
-					sheet1.getRow(7).createCell(8).setCellValue("'AgreementType ID' Button was NOT Displayed");
-					FileOutputStream fout=new FileOutputStream(src);
-					wb.write(fout);
-					wb.close();	
-					driver.quit();
-				}
-				else
-				{
-					sheet1.getRow(7).createCell(9).setCellValue("PASSED");
-					sheet1.getRow(7).createCell(8).setCellValue("AgreementType ID' Button was Displayed");
-					FileOutputStream fout=new FileOutputStream(src);
-					wb.write(fout);
-					driver.findElement(By.linkText("AgreementTypeID")).click();
-					}
-				
-				//Find the ID search filter box and click that in that box
-				Boolean AgreeTypeIdSrch = driver.findElements(By.id("ignore_agreement_view_AgreementTypeID_1_1")).size() >0;
-				Thread.sleep(3000);
-				
-				if ( ! AgreeTypeIdSrch)
-				{
-					sheet1.getRow(8).createCell(9).setCellValue("FAILED");
-					sheet1.getRow(8).createCell(8).setCellValue("AgreementType ID was NOT Entered");
-					FileOutputStream fout=new FileOutputStream(src);
-					wb.write(fout);
-					wb.close();	
-					driver.quit();
-				}
-				else
-				{
-					sheet1.getRow(8).createCell(9).setCellValue("PASSED");
-					sheet1.getRow(8).createCell(8).setCellValue("AgreementType ID was Entered");
-					FileOutputStream fout=new FileOutputStream(src);
-					wb.write(fout);
-					driver.findElement(By.id("ignore_agreement_view_AgreementTypeID_1_1")).click();
-					}
-		
-				driver.findElement(By.id("ignore_agreement_view_AgreementTypeID_1_1")).sendKeys(String.valueOf(agreementTypeId));
-				Thread.sleep(5000);
-				
-				Boolean AgreeTypeIdSrchResult = driver.findElements(By.linkText(String.valueOf(agreementTypeId))).size() >0;
-				
-				if ( ! AgreeTypeIdSrchResult)
-				{
-				
-					sheet1.getRow(9).createCell(9).setCellValue("FAILED");
-					sheet1.getRow(9).createCell(8).setCellValue("'AgreementType ID' was NOT Found");
-					FileOutputStream fout=new FileOutputStream(src);
-					wb.write(fout);
-					wb.close();	
-					driver.quit();
-				}
-				else
-				{
-					sheet1.getRow(9).createCell(9).setCellValue("PASSED");
-					sheet1.getRow(9).createCell(8).setCellValue("'AgreementType ID' was Found and Selected");
-					FileOutputStream fout=new FileOutputStream(src);
-					wb.write(fout);
-					driver.findElement(By.linkText(String.valueOf(agreementTypeId))).click();
-					}
+						//driver.findElement(By.id("drill_grid_agreement")).clear();
+						//Thread.sleep(1000);
+						//driver.findElement(By.id("drill_grid_agreement")).click();
+						//Thread.sleep(1000);
+						//driver.findElement(By.id("drill_grid_agreement")).sendKeys("ID");
+						//Thread.sleep(2000);
+						driver.findElement(By.linkText("ID")).click();
+						Thread.sleep(1000);
 							
 				//Find the ID filter button link and click that link
 				
-				Boolean idButton = driver.findElements(By.linkText("ID")).size() >0;
+				boolean idButton = driver.findElements(By.linkText("ID")).size() >0;
 				Thread.sleep(3000);
 				
 				if ( ! idButton)
 				{
 					
-					sheet1.getRow(10).createCell(9).setCellValue("FAILED");
-					sheet1.getRow(10).createCell(8).setCellValue("'ID Button' was NOT Displayed");
+					sheet1.getRow(7).createCell(9).setCellValue("FAILED");
+					sheet1.getRow(7).createCell(8).setCellValue("'ID Button' was NOT Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					wb.close();	
-					driver.quit();
+					//wb.close();	
+					//driver.quit();
 				}
 				else
 				{
-					sheet1.getRow(10).createCell(9).setCellValue("PASSED");
-					sheet1.getRow(10).createCell(8).setCellValue("'ID Button' was Displayed");
+					sheet1.getRow(7).createCell(9).setCellValue("PASSED");
+					sheet1.getRow(7).createCell(8).setCellValue("'ID Button' was Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
 					driver.findElement(By.linkText("ID")).click();
@@ -302,34 +254,116 @@ WebDriver driver;
 					}
 				
 				//Find the ID search filter box and click that in that box
-				Boolean idSrch = driver.findElements(By.id("ignore_agreement_view_id_1_1")).size() >0;
+				boolean idSrch = driver.findElements(By.id("ignore_agreement_view_id_1_1")).size() >0;
 				Thread.sleep(3000);
 				
 				if ( ! idSrch)
 				{
-					sheet1.getRow(11).createCell(9).setCellValue("FAILED");
-					sheet1.getRow(11).createCell(8).setCellValue("'Agreement ID' was NOT Entered");
+					sheet1.getRow(8).createCell(9).setCellValue("FAILED");
+					sheet1.getRow(8).createCell(8).setCellValue("'Agreement ID' was NOT Entered");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					wb.close();	
-					driver.quit();
+					//wb.close();	
+					//driver.quit();
 				}
 				else
 				{
-					sheet1.getRow(11).createCell(9).setCellValue("PASSED");
-					sheet1.getRow(11).createCell(8).setCellValue("'Agreement ID' was Entered");
+					sheet1.getRow(8).createCell(9).setCellValue("PASSED");
+					sheet1.getRow(8).createCell(8).setCellValue("'Agreement ID' was Entered");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
 					driver.findElement(By.id("ignore_agreement_view_id_1_1")).click();
 					}
 		
 				driver.findElement(By.id("ignore_agreement_view_id_1_1")).sendKeys(String.valueOf(agreementId));
-				Thread.sleep(10000);
+				Thread.sleep(5000);
 				
 				driver.findElement(By.linkText(String.valueOf(agreementId))).click();
 				Thread.sleep(3000);
 				
-				Boolean idRunSrch = driver.findElements(By.id("rungrid_agreement")).size() >0;
+				driver.findElement(By.id("close_grid_agreement")).click();
+				//driver.findElement(By.xpath("//button[contains(.,'Close')]")).click();
+				Thread.sleep(2000);
+				
+				driver.findElement(By.id("advSrch_grid_agreement")).click();
+				Thread.sleep(2000);
+				
+				//Find the Agreement Type ID filter button link and click that link
+				boolean AgreeTypeIdButton = driver.findElements(By.linkText("AgreementTypeID")).size() >0;
+				Thread.sleep(3000);
+				
+				if ( ! AgreeTypeIdButton)
+				{
+					
+					sheet1.getRow(9).createCell(9).setCellValue("FAILED");
+					sheet1.getRow(9).createCell(8).setCellValue("'AgreementType ID' Button was NOT Displayed");
+					FileOutputStream fout=new FileOutputStream(src);
+					wb.write(fout);
+					//wb.close();	
+					//driver.quit();
+				}
+				else
+				{
+					sheet1.getRow(9).createCell(9).setCellValue("PASSED");
+					sheet1.getRow(9).createCell(8).setCellValue("AgreementType ID' Button was Displayed");
+					FileOutputStream fout=new FileOutputStream(src);
+					wb.write(fout);
+					driver.findElement(By.linkText("AgreementTypeID")).click();
+					Thread.sleep(2000);
+					}
+				
+				//Find the ID search filter box and click that in that box
+				boolean AgreeTypeIdSrch = driver.findElements(By.id("ignore_agreement_view_AgreementTypeID_1_1")).size() >0;
+				Thread.sleep(2000);
+				
+				if ( ! AgreeTypeIdSrch)
+				{
+					sheet1.getRow(10).createCell(9).setCellValue("FAILED");
+					sheet1.getRow(10).createCell(8).setCellValue("AgreementType ID was NOT Entered");
+					FileOutputStream fout=new FileOutputStream(src);
+					wb.write(fout);
+					//wb.close();	
+					//driver.quit();
+				}
+				else
+				{
+					sheet1.getRow(10).createCell(9).setCellValue("PASSED");
+					sheet1.getRow(10).createCell(8).setCellValue("AgreementType ID was Entered");
+					FileOutputStream fout=new FileOutputStream(src);
+					wb.write(fout);
+					driver.findElement(By.id("ignore_agreement_view_AgreementTypeID_1_1")).click();
+					Thread.sleep(2000);
+					}
+		
+				driver.findElement(By.id("ignore_agreement_view_AgreementTypeID_1_1")).sendKeys(String.valueOf(agreementTypeId));
+				Thread.sleep(4000);
+				
+				//Click on the agreement type ID search result
+				boolean AgreeTypeIdSrchResult = driver.findElements(By.linkText(String.valueOf(agreementTypeId))).size() >0;
+				Thread.sleep(2000);
+				
+				if ( ! AgreeTypeIdSrchResult)
+				{
+				
+					sheet1.getRow(11).createCell(9).setCellValue("FAILED");
+					sheet1.getRow(11).createCell(8).setCellValue("'AgreementType ID' was NOT Found");
+					FileOutputStream fout=new FileOutputStream(src);
+					wb.write(fout);
+					//wb.close();	
+					////driver.quit();
+				}
+				else
+				{
+					sheet1.getRow(11).createCell(9).setCellValue("PASSED");
+					sheet1.getRow(11).createCell(8).setCellValue("'AgreementType ID' was Found and Selected");
+					FileOutputStream fout=new FileOutputStream(src);
+					wb.write(fout);
+					driver.findElement(By.linkText(String.valueOf(agreementTypeId))).click();
+					Thread.sleep(2000);
+					}
+			
+				//Click the Run button
+				boolean idRunSrch = driver.findElements(By.id("rungrid_agreement")).size() >0;
 				
 				if (!idRunSrch)
 				{
@@ -338,8 +372,8 @@ WebDriver driver;
 					sheet1.getRow(12).createCell(8).setCellValue("'Run Serach' was NOT Initiated");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					wb.close();	
-					driver.quit();
+					//wb.close();	
+					////driver.quit();
 				
 				}
 				else
@@ -351,12 +385,32 @@ WebDriver driver;
 					driver.findElement(By.id("rungrid_agreement")).click();
 					Thread.sleep(3000);
 					}
+			
 				
-				//Select the check box and click [Create Quote] button
-				driver.findElement(By.id("jqg_grid_agreement_" + String.valueOf(agreementId))).click();
-				Thread.sleep(3000);
+				//Search agreement grid for agreement Id
+				boolean findElementPage = false;
+				pageCounter = 1;
 				
-				Boolean CreateQuote = driver.findElements(By.id("create_quote")).size() >0;
+				agreementId = (int) sheet1.getRow(1).getCell(3).getNumericCellValue();
+				while( ! findElementPage  &&  !String.valueOf(pageCounter).equals(numPages))
+					
+				{findElementPage = driver.findElements(By.id("jqg_grid_" + gridTitle + "_" + String.valueOf(agreementId))).size() >0;
+				
+				
+				if( ! findElementPage )
+				{
+					driver.findElement(By.id("next_grid_" + gridTitle + "-gridpager")).click();
+					pageCounter++;
+					Thread.sleep(3000);
+				}
+				
+				if ( findElementPage ) {
+				driver.findElement(By.id("jqg_grid_" + gridTitle + "_" + String.valueOf(agreementId))).click();
+				Thread.sleep(3000);}
+				}
+				
+				//Click [Create Quote] button
+				boolean CreateQuote = driver.findElements(By.id("create_quote")).size() >0;
 			
 				if ( ! CreateQuote)
 				{
@@ -365,8 +419,8 @@ WebDriver driver;
 					sheet1.getRow(13).createCell(8).setCellValue("'Create Quote' was NOT Initiated");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					wb.close();	
-					driver.quit();
+					//wb.close();	
+					//driver.quit();
 					
 				}
 				else
@@ -380,7 +434,7 @@ WebDriver driver;
 					}
 				
 				//Select the Parent checkbox for quote
-				Boolean ParentAgreement = driver.findElements(By.cssSelector(".parent_checkbox")).size() >0;
+				boolean ParentAgreement = driver.findElements(By.cssSelector(".parent_checkbox")).size() >0;
 			
 				if ( ! ParentAgreement)
 				{
@@ -389,8 +443,8 @@ WebDriver driver;
 					sheet1.getRow(14).createCell(8).setCellValue("'Parent Agreement' was NOT Selected");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					wb.close();	
-					driver.quit();
+					//wb.close();	
+					//driver.quit();
 					
 				}
 				else
@@ -405,19 +459,20 @@ WebDriver driver;
 					Thread.sleep(3000);
 					}
 				
-				//Boolean for quote confirmation pop up must be true otherwise fail
+				//boolean for quote confirmation pop up must be true otherwise fail
 				//Find Cancel button and click. Agreement grid should be displayed
-				Boolean confirmation = driver.findElements(By.cssSelector("p.alert")).size() >0;
+				//boolean confirmation = driver.findElements(By.cssSelector("p.alert")).size() >0;
+				boolean confirmation = driver.findElements(By.id("validation_errors")).size() >0;
 				//confirmation = (driver.findElement(By.id("createDialogContinue")).isDisplayed());
 				
-				if ( ! confirmation)
+				if (! confirmation)
 				{					
 					sheet1.getRow(15).createCell(9).setCellValue("FAILED");
 					sheet1.getRow(15).createCell(8).setCellValue("Confirmation page with ERROR was NOT Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					wb.close();	
-					driver.quit();
+					//wb.close();	
+					//driver.quit();
 				}
 				else
 				{
@@ -425,18 +480,26 @@ WebDriver driver;
 					sheet1.getRow(15).createCell(8).setCellValue("Confirmation page with ERROR is Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					driver.findElement(By.cssSelector("div.ui-dialog:nth-child(42) > div:nth-child(3) > div:nth-child(1) > button:nth-child(1)")).click();
+					driver.findElement(By.id("createDialogCancel")).click();
 					Thread.sleep(3000);
 				}
 				
+				
+				/*if(driver.findElements(By.id("createDialogCancel")))
+				{driver.findElement(By.id("createDialogCancel")).click();
+				Thread.sleep(1000);}*/
+				
 				//Clear search and refresh grid
-					driver.findElement(By.id("cancelMaingrid_agreement")).click();
-					Thread.sleep(2000);
-					driver.findElement(By.id("refresh_grid_agreement")).click();
-					Thread.sleep(2000);
+				if(driver.findElements(By.id("cancelMaingrid_agreement")).size() >0)
+					{driver.findElement(By.id("cancelMaingrid_agreement")).click();
+					Thread.sleep(2000);}
+				
+				if(driver.findElements(By.id("refresh_grid_agreement")).size() >0)
+					{driver.findElement(By.id("refresh_grid_agreement")).click();
+					Thread.sleep(2000);}
 				
 				//Find Agreement grid and display
-				Boolean confirmation2 = driver.findElements(By.id("content_pane")).size() >0;
+				boolean confirmation2 = driver.findElements(By.id("content_pane")).size() >0;
 				
 				if ( ! confirmation2)
 				{
@@ -445,8 +508,8 @@ WebDriver driver;
 					sheet1.getRow(16).createCell(8).setCellValue("'Agreements Grid' was NOT Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					wb.close();	
-					driver.quit();
+					//wb.close();	
+					//driver.quit();
 					
 				}
 				else
@@ -457,11 +520,11 @@ WebDriver driver;
 					wb.write(fout);
 					}
 				
-				wb.close();	
+				//wb.close();	
 				driver.quit();
+				}
 		
 		
-	}	
 	public void quoteFromAgreementWithParent() throws Throwable	{
 		
 	}

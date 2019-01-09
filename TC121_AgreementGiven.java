@@ -3,6 +3,7 @@ package maven1;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -10,12 +11,16 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 //import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.ITestResult;
 import org.testng.annotations.Test;
+//import org.testng.annotations.Test;
 
 public class TC121_AgreementGiven {
 	
-WebDriver driver;
+//WebDriver driver;
+	public Select selenium;
+	public static WebDriver driver;
 
 	
 	/*
@@ -23,19 +28,23 @@ WebDriver driver;
 	 * 
 	
 	*/
-	@Test(priority=1)
-	public  void quoteFromAgreement() throws Throwable {
-		// TODO Auto-generated method stub
+	@SuppressWarnings("resource")
+	@Test(priority=2)
+	public static void main(String[] args) throws IOException, InterruptedException { 
+	//public  void quoteFromAgreement() throws Throwable {
+		
 		
 		//System.setProperty("webdriver.chrome.driver", "C:\\mmi_auto_testing\\bin\\chromedriver.exe");
-		System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
-		//System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
+		//System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
+		System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
 		driver=new FirefoxDriver();
 		//driver=new ChromeDriver();
 		driver.manage().window().maximize();
+		Thread.sleep(2000);
 		
-		File src=new File("C:\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
-		//File src=new File("SEAutoTesting.xlsx");
+		//File src=new File("C:\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
+		File src=new File("C:\\mmi_automation\\mmi_auto_testing_AdvancedSearch\\data\\AdvancedSearch_SEAutoTesting.xlsx");
+		//File src=new File("data\\SEAutoTesting.xlsx");
 		
 		FileInputStream fis=new FileInputStream(src);
 		
@@ -61,13 +70,8 @@ WebDriver driver;
 		String numPages;
 		int pageCounter;
 		
-		
 		String gridTitle = "agreement";
-		
-		
-		
-		//numRows = sheet1.getLastRowNum();
-		
+
 		
 			baseUrl =sheet1.getRow(1).getCell(0).getStringCellValue();
 			logoutUrl =baseUrl + "/auth/logout"; 
@@ -79,17 +83,20 @@ WebDriver driver;
 			
 			
 			driver.get(logoutUrl);
+			Thread.sleep(2000);
 			driver.get(loginUrl);
+			Thread.sleep(2000);
+			driver.findElement(By.id("email")).clear();
 			driver.findElement(By.id("email")).sendKeys(testUsername);
-			//Actions actions = new Actions(driver);
+			
 			driver.findElement(By.id("password-text")).sendKeys(testPassword);
 			
 			//Click the Login button
 			driver.findElement(By.id("Login")).click();
-			Thread.sleep(12000);
+			Thread.sleep(10000);
 					
 		   // agreementUrl = baseUrl + "/sf/" + gridTitle;
-			// driver.get(agreementUrl);
+		   // driver.get(agreementUrl);
 			
 			
 			//Click on " Installed Base" tab 
@@ -97,7 +104,7 @@ WebDriver driver;
 			Thread.sleep(5000);
 			
 			//Click on the Agreements tab
-			Boolean actualResult =  driver.findElements(By.id("submenulink_129")).size() >0;
+			boolean actualResult =  driver.findElements(By.id("submenulink_129")).size() >0;
 			
 			//Assert.assertTrue(actualResult);
 			if( ! actualResult)
@@ -107,8 +114,8 @@ WebDriver driver;
 				sheet1.getRow(3).createCell(8).setCellValue("Agreements Tab Submenu was NOT found");
 				FileOutputStream fout=new FileOutputStream(src);
 				wb.write(fout);
-				wb.close();	
-				driver.quit();
+				//wb.close();	
+				//driver.quit();
 				
 			}
 			else
@@ -123,7 +130,7 @@ WebDriver driver;
 			
 			//Click on " Agreements" icon from sub-menu
 			 driver.findElement(By.id("submenulink_129")).click();
-			 Thread.sleep(12000);
+			 Thread.sleep(6000);
 			 
 
 			 if(driver.findElements(By.id("cancelMaingrid_agreement")).size()>0) {
@@ -140,8 +147,8 @@ WebDriver driver;
 					sheet1.getRow(4).createCell(8).setCellValue("Empty Grid");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					wb.close();	
-					driver.quit();
+					//wb.close();	
+					//driver.quit();
 				}
 				else
 				{
@@ -182,14 +189,37 @@ WebDriver driver;
 			 Thread.sleep(2000);
 			 driver.findElement(By.id("ignore_agreement_view_id_1_1")).sendKeys(String.valueOf(agreementId));
 			 Thread.sleep(3000);
-			 driver.findElement(By.linkText(String.valueOf(agreementId))).click();
-			 Thread.sleep(2000);
-			 driver.findElement(By.id("rungrid_agreement")).click();
-			 Thread.sleep(3000);
-			 
+		 
+			//Click on search result for agreement ID
+			boolean idSrchResult = driver.findElements(By.linkText(String.valueOf(agreementId))).size() >0;
+			Thread.sleep(1000);
+			
+			if ( ! idSrchResult)
+			{
+			
+				sheet1.getRow(6).createCell(9).setCellValue("FAILED");
+				sheet1.getRow(6).createCell(8).setCellValue("'Agreement ID' was NOT Found");
+				FileOutputStream fout=new FileOutputStream(src);
+				wb.write(fout);
+				//wb.close();	
+				//driver.quit();
+				
+			}
+			else
+			{
+				sheet1.getRow(6).createCell(9).setCellValue("PASSED");
+				sheet1.getRow(6).createCell(8).setCellValue("'Agreement ID' was Found");
+				FileOutputStream fout=new FileOutputStream(src);
+				wb.write(fout);
+				driver.findElement(By.linkText(String.valueOf(agreementId))).click();
+				Thread.sleep(2000);
+				driver.findElement(By.id("rungrid_agreement")).click();
+				Thread.sleep(2000);
+			}
+		 
 			 
 			  //Advanced search Simulation)
-				Boolean findElementPage = false;
+				boolean findElementPage = false;
 				pageCounter = 1;
 				//sp_1_grid_agreement-gridpager  //Total pages
 				//pg_input_bottom_grid_agreement //Actual page number
@@ -210,45 +240,45 @@ WebDriver driver;
 				{
 				 
 				   //Write in result file that element does not exists
-					sheet1.getRow(6).createCell(9).setCellValue("FAILED");
-					sheet1.getRow(6).createCell(8).setCellValue("No pages with AgreementID " + agreementId + " were not found in the system");
+					sheet1.getRow(7).createCell(9).setCellValue("FAILED");
+					sheet1.getRow(7).createCell(8).setCellValue("No pages with AgreementID " + agreementId + " were not found in the system");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout); 
-					wb.close();	
-					driver.quit();
+					//wb.close();	
+					//driver.quit();
 				}
 				else
 				{
-					sheet1.getRow(6).createCell(9).setCellValue("PASSED");
-					sheet1.getRow(6).createCell(8).setCellValue("Page with AgreementID " + agreementId + " found");
+					sheet1.getRow(7).createCell(9).setCellValue("PASSED");
+					sheet1.getRow(7).createCell(8).setCellValue("Page with AgreementID " + agreementId + " found");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout); 
 				}
 				
 				
 				//Select the check box and click [Create Quote] button
-				driver.findElement(By.id("jqg_grid_agreement_" + String.valueOf(agreementId))).click();
+				driver.findElement(By.id("jqg_grid_" + gridTitle + "_" + String.valueOf(agreementId))).click();
 				Thread.sleep(3000);
 				driver.findElement(By.id("create_quote")).click();
 				Thread.sleep(3000);
 				
-				//Boolean for quote confirmation pop up must be true otherwise fail
-				Boolean confirmation = driver.findElement(By.id("createDialogContinue")).isDisplayed();
+				//boolean for quote confirmation pop up must be true otherwise fail
+				boolean IDSrch = driver.findElement(By.id("createDialogContinue")).isDisplayed();
 				
-				if ( ! confirmation)
+				if ( ! IDSrch)
 				{
-					sheet1.getRow(7).createCell(9).setCellValue("FAILED");
-					sheet1.getRow(7).createCell(8).setCellValue("Confirmation page was NOT Displayed");
+					sheet1.getRow(8).createCell(9).setCellValue("FAILED");
+					sheet1.getRow(8).createCell(8).setCellValue("Confirmation page was NOT Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					wb.close();	
-					driver.quit();
+					//wb.close();	
+					//driver.quit();
 					
 				}
 				else
 				{
-					sheet1.getRow(7).createCell(9).setCellValue("PASSED");
-					sheet1.getRow(7).createCell(8).setCellValue("Confirmation page is Displayed");
+					sheet1.getRow(8).createCell(9).setCellValue("PASSED");
+					sheet1.getRow(8).createCell(8).setCellValue("Confirmation page is Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
 					Thread.sleep(3000);
@@ -258,62 +288,67 @@ WebDriver driver;
 				driver.findElement(By.id("createDialogContinue")).click();
 				Thread.sleep(3000);
 				
-				Boolean continue1 = driver.findElement(By.id("ui-id-2")).isDisplayed();
+				boolean continue1 = driver.findElement(By.id("ui-id-2")).isDisplayed();
 				
 				if (continue1)
 				{	driver.findElement(By.id("createDialogContinue")).click();
 				Thread.sleep(2000);}
 				
 				
-				Boolean confirmation1 = driver.findElement(By.cssSelector("div.ui-dialog:nth-child(45) > div:nth-child(3) > div:nth-child(1) > button:nth-child(1)")).isDisplayed();
-				
+				boolean confirmation1 = driver.findElements(By.xpath("//button[contains(.,'OK')]")).size() >0;
+				Thread.sleep(1000);
 				if ( ! confirmation1)
 				{
 					
 					
-					sheet1.getRow(8).createCell(9).setCellValue("FAILED");
-					sheet1.getRow(8).createCell(8).setCellValue("'Quote is being Processed' was NOT Displayed");
+					sheet1.getRow(9).createCell(9).setCellValue("FAILED");
+					sheet1.getRow(9).createCell(8).setCellValue("'Quote is being Processed' was NOT Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					wb.close();	
-					driver.quit();
+					//wb.close();	
+					//driver.quit();
 					
 				}
 				else
 				{
-					sheet1.getRow(8).createCell(9).setCellValue("PASSED");
-					sheet1.getRow(8).createCell(8).setCellValue("'Quote is being Processed' was Displayed");
+					sheet1.getRow(9).createCell(9).setCellValue("PASSED");
+					sheet1.getRow(9).createCell(8).setCellValue("'Quote is being Processed' was Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
+					driver.findElement(By.xpath("//button[contains(.,'OK')]")).click();
+					Thread.sleep(3000);
 					}
 				
-				driver.findElement(By.cssSelector("div.ui-dialog:nth-child(45) > div:nth-child(3) > div:nth-child(1) > button:nth-child(1)")).click();
-				Thread.sleep(3000);
+				
+				
+				
 				driver.findElement(By.id("cancelMaingrid_agreement")).click();
 				Thread.sleep(5000);
 				driver.findElement(By.id("refresh_grid_agreement")).click();
 				Thread.sleep(3000);
 				
-				Boolean confirmation2 = driver.findElement(By.id("content_pane")).isDisplayed();
+				boolean confirmation2 = driver.findElement(By.id("content_pane")).isDisplayed();
 				
 				if ( ! confirmation2)
 				{
-					sheet1.getRow(9).createCell(9).setCellValue("FAILED");
-					sheet1.getRow(9).createCell(8).setCellValue("'Agreements Grid' was NOT Displayed");
+					sheet1.getRow(10).createCell(9).setCellValue("FAILED");
+					sheet1.getRow(10).createCell(8).setCellValue("'Agreements Grid' was NOT Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
-					wb.close();	
-					driver.quit();
+					//wb.close();	
+					//driver.quit();
 				}
 				else
 				{
-					sheet1.getRow(9).createCell(9).setCellValue("PASSED");
-					sheet1.getRow(9).createCell(8).setCellValue("'Agreements Grid' was Displayed");
+					sheet1.getRow(10).createCell(9).setCellValue("PASSED");
+					sheet1.getRow(10).createCell(8).setCellValue("'Agreements Grid' was Displayed");
 					FileOutputStream fout=new FileOutputStream(src);
 					wb.write(fout);
 					}
 				
-	    wb.close();	
+	
+				
+	    //wb.close();	
 		driver.quit();
 	}	
 	public void quoteFromAgreementWithParent() throws Throwable	{

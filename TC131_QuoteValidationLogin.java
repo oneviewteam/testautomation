@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+
+import org.apache.commons.io.FileUtils;
 
 //import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 //import org.apache.poi.hssf.util.HSSFColor;
@@ -11,15 +14,18 @@ import java.io.IOException;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+//import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.ITestResult;
-//import org.testng.annotations.Test;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.Test;
 
-public class TC311_GCSiteLogin {
+public class TC131_QuoteValidationLogin {
 	
-//WebDriver driver;
 	public Select selenium;
 	public static WebDriver driver;
 
@@ -29,32 +35,37 @@ public class TC311_GCSiteLogin {
 	 * 
 	
 	*/
-	//@Test(priority=1)
-	//public  void quoteFromAgreement() throws Throwable {
-		// TODO Auto-generated method stub
-public static void main(String[] args) throws IOException, InterruptedException { 
+@Test(priority=1)
+    public static void main(String[] args) throws IOException, InterruptedException { 
+    
+
 		
 		//System.setProperty("webdriver.chrome.driver", "C:\\mmi_auto_testing\\bin\\chromedriver.exe");
 		//System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
 		System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
+		//System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+	
 		driver=new FirefoxDriver();
 		//driver=new ChromeDriver();
 		driver.manage().window().maximize();
 		Thread.sleep(2000);
 		
-		//File src=new File("C:\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
+		//((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
 		File src=new File("C:\\mmi_automation\\mmi_auto_testing_AdvancedSearch\\data\\AdvancedSearch_SEAutoTesting.xlsx");
-		//File src=new File("data\\SEAutoTesting.xlsx");
+		//File src=new File("SEAutoTesting.xlsx");
+	
+		//FileUtils.copyFile(src, new File("C:\\mmi_automation\\mmi_auto_testing_AdvancedSearch\\output\\Screenshots"+System.currentTimeMillis()+".jpg"));  
 		
 		FileInputStream fis=new FileInputStream(src);
 		
+		//TC111_SELogin_Agreement.captureScreenShot(driver);
 		XSSFWorkbook wb=new XSSFWorkbook(fis);
 		
 		//get sheet at index
 		//XSSFSheet sheet1=wb.getSheetAt(1);  
 		
 		// Get sheet by name
-		XSSFSheet sheet1=wb.getSheet("TC311");
+		XSSFSheet sheet1=wb.getSheet("TC131");
 		//XSSFSheet sheet2=wb.createSheet("results");
 		
 		
@@ -87,7 +98,9 @@ public static void main(String[] args) throws IOException, InterruptedException 
 			Thread.sleep(2000);
 			driver.get(loginUrl);
 			Thread.sleep(2000);
-			
+			driver.findElement(By.id("email")).clear();
+			driver.findElement(By.id("email")).sendKeys(testUsername);
+			Thread.sleep(2000);
 			
 			Boolean actualResult = driver.findElements(By.id("email")).size()>0; 
 			
@@ -95,12 +108,11 @@ public static void main(String[] args) throws IOException, InterruptedException 
 		          //login.click();
 		          //Main Event is logged If Passed
 		          {
-				
-				
 						sheet1.getRow(4).createCell(9).setCellValue("FAILED");
 						sheet1.getRow(4).createCell(8).setCellValue("Username was NOT Input");
-												
+						//File src1= ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);						
 						FileOutputStream fout=new FileOutputStream(src);
+						
 						wb.write(fout);
 						wb.close();	
 						driver.quit();
@@ -113,13 +125,11 @@ public static void main(String[] args) throws IOException, InterruptedException 
 						sheet1.getRow(4).createCell(8).setCellValue("Username was Input");
 						FileOutputStream fout=new FileOutputStream(src);
 						wb.write(fout);
-						driver.findElement(By.id("email")).clear();
-						driver.findElement(By.id("email")).sendKeys(testUsername);
-						Thread.sleep(2000);
-					
 					}
 
-											
+			//Actions actions = new Actions(driver);
+			driver.findElement(By.id("password-text")).sendKeys(testPassword);
+						
 			Boolean actualResult1 = driver.findElements(By.id("password-text")).size()>0; 
 			if(! actualResult1)
 		          //login.click();
@@ -141,15 +151,13 @@ public static void main(String[] args) throws IOException, InterruptedException 
 						sheet1.getRow(5).createCell(8).setCellValue("Password was Input");
 						FileOutputStream fout=new FileOutputStream(src);
 						wb.write(fout);
-						driver.findElement(By.id("password-text")).sendKeys(testPassword);
-						Thread.sleep(2000);
 					}
 			
 			
 			
 			//If statement - will check if element is Displayed before clicking on login button.
 			Boolean actualResult2 = driver.findElements(By.id("Login")).size()>0; 
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 			if(! actualResult2)
 		          //login.click();
 		          //Main Event is logged If Passed
@@ -170,14 +178,16 @@ public static void main(String[] args) throws IOException, InterruptedException 
 						sheet1.getRow(6).createCell(8).setCellValue("login button was found and Clicked");
 						FileOutputStream fout=new FileOutputStream(src);
 						wb.write(fout);
+						driver.findElement(By.id("Login")).click();
+						Thread.sleep(15000);
 						
 					}
 			
-			driver.findElement(By.id("Login")).click();
-			Thread.sleep(10000);
 			
+			
+			//Identify the the Dash board is present
 			Boolean actualResult3 =  driver.findElements(By.id("dashboard")).size() >0;
-			//Assert.assertTrue(actualResult);
+			
 			if(! actualResult3)
 			{
 				sheet1.getRow(7).createCell(9).setCellValue("FAILED");
@@ -185,7 +195,7 @@ public static void main(String[] args) throws IOException, InterruptedException 
 				FileOutputStream fout=new FileOutputStream(src);
 				wb.write(fout);
 				wb.close();	
-				driver.quit();
+				//driver.quit();
 				
 			}
 			else
@@ -198,33 +208,25 @@ public static void main(String[] args) throws IOException, InterruptedException 
 				wb.write(fout);
 			}
 			
-
-					
-		   // agreementUrl = baseUrl + "/sf/" + gridTitle;
-			// driver.get(agreementUrl);
-			
-			
-		
+	
 	    wb.close();	
 		driver.quit();
-	}	
-	public void quoteFromAgreementWithParent() throws Throwable	{
-		
-	}
-
-
-	//@AfterMethod
-	public void tearDown(ITestResult result)
+}
 	
-	{
-		
-		if(ITestResult.FAILURE==result.getStatus())
-		{
-			//Utility.captureScreenshot(driver, result.getName());
-		}
-		
-		driver.quit();
-	}
+	
 
+
+	@AfterMethod
+		public void takeScreenShotOnFailure(ITestResult testResult) throws IOException {
+			if (testResult.getStatus() == ITestResult.FAILURE) {
+				System.out.println(testResult.getStatus());
+				File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+				FileUtils.copyFile(scrFile, new File("C:\\mmi_automation\\mmi_auto_testing_AdvancedSearch\\output\\" + testResult.getName() + "-" 
+						+ Arrays.toString(testResult.getParameters()) +  ".jpg"));
+		   }        
+		}
+
+	
 
 }
+

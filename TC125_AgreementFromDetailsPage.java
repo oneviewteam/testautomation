@@ -3,8 +3,7 @@ package maven1;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-
-
+import java.io.IOException;
 
 //import org.apache.poi.ss.usermodel.Sheet;
 //import org.apache.poi.ss.usermodel.Cell;
@@ -22,29 +21,34 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.ITestResult;
-import org.testng.annotations.Test;
+//import org.testng.annotations.Test;
 
 public class TC125_AgreementFromDetailsPage {
 
-WebDriver driver;
+//WebDriver driver;
+	public Select selenium;
+	public static WebDriver driver;
 	
 	/*
 	 * Create a quote from agreement
 	 * 
 	*/
-	@Test(priority=1)
-	public  void quoteFromAgreement() throws Throwable {
-		// TODO Auto-generated method stub
+	//@Test(priority=1)
+	//public  void quoteFromAgreement() throws Throwable {
+		
+public static void main(String[] args) throws IOException, InterruptedException { 
 		
 		//System.setProperty("webdriver.chrome.driver", "C:\\mmi_auto_testing\\bin\\chromedriver.exe");
-		System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
-		//System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
+		//System.setProperty("webdriver.gecko.driver", "C:\\mmi_auto_testing\\bin\\geckodriver.exe");
+		System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
 		driver=new FirefoxDriver();
 		//driver=new ChromeDriver();
 		driver.manage().window().maximize();
+		Thread.sleep(2000);
 		
-		File src=new File("C:\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
-		//File src=new File("SEAutoTesting.xlsx");
+		//File src=new File("C:\\mmi_auto_testing\\data\\SEAutoTesting.xlsx");
+		File src=new File("C:\\mmi_automation\\mmi_auto_testing_AdvancedSearch\\data\\AdvancedSearch_SEAutoTesting.xlsx");
+		//File src=new File("data\\SEAutoTesting.xlsx");
 		
 		FileInputStream fis=new FileInputStream(src);
 		
@@ -96,14 +100,19 @@ WebDriver driver;
 			// String testQuoteUrl =sheet1.getRow(1).getCell(3).getStringCellValue();
 			
 			driver.get(logoutUrl);
+			Thread.sleep(2000);
 			driver.get(loginUrl);
+			Thread.sleep(2000);
+			driver.findElement(By.id("email")).clear();
 			driver.findElement(By.id("email")).sendKeys(testUsername);
-			//Actions actions = new Actions(driver);
+			Thread.sleep(2000);
+			
 			driver.findElement(By.id("password-text")).sendKeys(testPassword);
+			Thread.sleep(2000);
 			
 			//Click the Login button
 			driver.findElement(By.id("Login")).click();
-			Thread.sleep(12000);
+			Thread.sleep(10000);
 					
 		   // agreementUrl = baseUrl + "/sf/" + gridTitle;
 			// driver.get(agreementUrl);
@@ -313,21 +322,27 @@ WebDriver driver;
 					}
 				
 				//Select the check box and click [Create Quote] button
-				Boolean findElementPage = true;
+				Boolean findElementPage = false;
 				pageCounter = 1;
-				while( !findElementPage  &&  !String.valueOf(pageCounter).equals(numPages))
+				while( ! findElementPage  &&  !String.valueOf(pageCounter).equals(numPages))
 					
 				{findElementPage = driver.findElements(By.id("jqg_grid_" + gridTitle + "_" + String.valueOf(agreementDetailsId))).size() >0;
-				}
-				if(! findElementPage )
+				
+				
+				if( ! findElementPage )
 				{
 					driver.findElement(By.id("next_grid_" + gridTitle + "-gridpager")).click();
 					pageCounter++;
 					Thread.sleep(3000);
 				}
-				driver.findElement(By.id("jqg_grid_agreement_" + String.valueOf(agreementDetailsId))).click();
+				}
+				if( findElementPage )
+				{				
+				//Select the check box 
+				driver.findElement(By.id("jqg_grid_" + gridTitle + "_" + String.valueOf(agreementDetailsId))).click();
 				Thread.sleep(3000);
-				
+				}
+							
 				//Click one the view icon on the grid line
 				Boolean QuoteDetailsButton = driver.findElements(By.id("view" + String.valueOf(agreementDetailsId))).size() >0;
 				
@@ -411,7 +426,7 @@ WebDriver driver;
 				Thread.sleep(2000);}
 				
 				//Click the "OK" button on the confirmation page
-				Boolean confirmation1 = driver.findElements(By.id("ui-id-12")).size() >0;
+				Boolean confirmation1 = driver.findElements(By.xpath("//html/body/div[13]/div[3]/div/button")).size() >0;
 				
 				if ( ! confirmation1)
 				{
@@ -432,7 +447,7 @@ WebDriver driver;
 					wb.write(fout);
 					}
 				
-				driver.findElement(By.xpath("//html/body/div[14]/div[3]/div/button")).click();
+				driver.findElement(By.xpath("//html/body/div[13]/div[3]/div/button")).click();
 				Thread.sleep(3000);
 				driver.findElement(By.id("submenulink_129")).click();  
 				Thread.sleep(3000);
